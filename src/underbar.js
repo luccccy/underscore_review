@@ -364,7 +364,6 @@
 
   };
 
-
   /**
    * ADVANCED COLLECTION OPERATIONS
    * ==============================
