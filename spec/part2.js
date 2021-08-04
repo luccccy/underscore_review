@@ -236,7 +236,6 @@
          * to our initial object, then both variables are indeed references to the same object
          * and we are guaranteed that only the contents of our original object were modified
          */
-
         var destination = {};
         var source = {};
         var defaulted = _.defaults(destination, source);
