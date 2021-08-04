@@ -98,25 +98,79 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    // run each element through the test and return elements that pass the test
+    var result = [];
+    _.each(collection, function(item) {
+      if (test(item)) {
+        result.push(item);
+      }
+    });
+    return result;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    var result = [];
+    _.each(collection, function(item) {
+      if (!test(item)) {
+        result.push(item);
+      }
+    });
+    return result;
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
+    // declare a result array
+    var result = [];
+    // iterate over the input array
+    if (iterator === undefined) {
+      // check if current element does not exists in result array
+      // push current element to result array
+      // for (var i = 0; i < array.length; i++) {
+      //   if (result.indexOf(array[i]) === -1) {
+      //     result.push(array[i]);
+      //   }
+      // }
+      _.each(array, function(item) {
+        if (result.indexOf(item) === -1) {
+          result.push(item);
+        }
+      });
+    } else {
+      var obj = {};
+      _.each(array, function(item) {
+        var transformed = iterator(item);
+        if (obj[transformed] === undefined) {
+          obj[transformed] = item;
+        }
+      });
+      _.each(obj, function(value) {
+        result.push(value);
+      });
+    }
+    // return result
+    return result;
   };
 
 
   // Return the results of applying an iterator to each element.
+  // [1, 2, 3 ]  [2, 6, 8]
   _.map = function(collection, iterator) {
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    var result = [];
+
+    _.each(collection, function(item) {
+      result.push(iterator(item));
+    });
+
+    return result;
   };
+
 
   /*
    * TIP: map is really handy when you want to transform an array of
@@ -157,6 +211,14 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    if (accumulator === undefined) {
+      accumulator = collection[0];
+      collection = collection.slice(1);
+    }
+    _.each(collection, function(item) {
+      accumulator = iterator(accumulator, item);
+    });
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -173,14 +235,24 @@
 
 
   // Determine whether all of the elements match a truth test.
+
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    iterator = iterator || _.identity;
+    return _.reduce(collection, function(trueSoFar, item) {
+      return trueSoFar && Boolean(iterator(item));
+    }, true);
+
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    iterator = iterator || _.identity;
+    return _.reduce(collection, function(trueSoFar, item) {
+      return trueSoFar || Boolean(iterator(item));
+    }, false);
   };
 
 
@@ -203,6 +275,7 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+
   };
 
   // Like extend, but doesn't ever overwrite a key that already
